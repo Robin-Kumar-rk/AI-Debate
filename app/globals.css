@@ -309,16 +309,18 @@ textarea {
 
 .robot-scene {
   position: relative;
-  min-height: 250px;
+  min-height: 360px;
   border-radius: 20px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 38%),
     linear-gradient(180deg, rgba(10, 22, 35, 0.7) 0%, rgba(4, 11, 18, 0.95) 100%);
   border: 1px solid rgba(192, 218, 239, 0.08);
   display: grid;
+  grid-template-rows: minmax(108px, auto) 1fr;
   justify-items: center;
-  align-items: flex-end;
-  padding: 4.5rem 1rem 1rem;
+  align-items: start;
+  padding: 1rem;
+  row-gap: 1rem;
 }
 
 .robot-scene::after {
@@ -336,6 +338,8 @@ textarea {
   width: 112px;
   height: 170px;
   transform-origin: center bottom;
+  align-self: end;
+  z-index: 1;
 }
 
 .robot-speaking {
@@ -519,11 +523,9 @@ textarea {
 }
 
 .speech-bubble {
-  position: absolute;
-  top: 0.85rem;
-  left: 0.85rem;
-  right: 0.85rem;
-  min-height: 60px;
+  position: relative;
+  width: 100%;
+  min-height: 96px;
   padding: 0.85rem 0.95rem;
   border-radius: 18px 18px 18px 4px;
   border: 1px solid rgba(192, 218, 239, 0.14);
@@ -531,6 +533,7 @@ textarea {
   color: var(--text);
   line-height: 1.45;
   font-size: 0.9rem;
+  z-index: 2;
 }
 
 .speech-bubble-live {

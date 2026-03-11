@@ -511,6 +511,31 @@ function buildSupporterSentence(text: string | null, lead: string): string {
   return ` ${lead} ${normalizeSupporterText(text)}.`;
 }
 
+function buildFallbackReason(error: unknown): string {
+  if (!(error instanceof Error)) {
+    return "Gemini is unavailable. Showing local demo responses instead.";
+  }
+
+  const message = error.message;
+  const retryMatch = message.match(/Please retry in\s+([0-9.]+)s/i);
+
+  if (/quota exceeded|rate limit/i.test(message)) {
+    if (retryMatch) {
+      const retrySeconds = Math.max(1, Math.ceil(Number(retryMatch[1])));
+
+      return `Gemini quota is temporarily exhausted. Showing local demo responses instead. Try again in about ${retrySeconds} seconds.`;
+    }
+
+    return "Gemini quota is temporarily exhausted. Showing local demo responses instead.";
+  }
+
+  if (/GEMINI_API_KEY is not configured/i.test(message)) {
+    return "Gemini API key is not configured. Showing local demo responses instead.";
+  }
+
+  return "Gemini is unavailable right now. Showing local demo responses instead.";
+}
+
 function buildFallbackStatement({
   topic,
   side,
@@ -629,10 +654,7 @@ async function generateStatement(
     return {
       text: buildFallbackStatement(options),
       usedFallback: true,
-      fallbackReason:
-        error instanceof Error
-          ? `${error.message} Showing local demo responses instead.`
-          : "Gemini is unavailable. Showing local demo responses instead.",
+      fallbackReason: buildFallbackReason(error),
     };
   }
 }
